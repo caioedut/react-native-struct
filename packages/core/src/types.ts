@@ -477,6 +477,7 @@ export type ThemeProps = {
 
   components: {
     ActionSheet: ThemeComponentProps<ActionSheetProps, 'root'>;
+    AutoComplete: ThemeComponentProps<AutoCompleteProps, 'root' | 'item' | 'input'>;
     Avatar: ThemeComponentProps<AvatarProps, 'root' | 'content'>;
     Animation: ThemeComponentProps<AnimationProps, 'root'>;
     Backdrop: ThemeComponentProps<BackdropProps, 'root'>;
@@ -586,6 +587,7 @@ export type TextProps = PropsWithStyles<{
   bold?: boolean;
   italic?: boolean;
   smallCaps?: boolean;
+  selectable?: boolean;
   weight?: 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900' | (string & {});
   transform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase' | 'full-width';
   numberOfLines?: number;
@@ -1064,6 +1066,11 @@ export type CalendarProps = PropsWithStyles<{
   events?: (Date | string | number)[];
   // Events
   onPressDate?: (event: AnyObject, date: Date) => any;
+}>;
+
+export type AutoCompleteProps = PropsWithStyles<{
+  color?: RbkColor;
+  options: SelectOption[] | undefined;
 }>;
 
 export type AvatarProps = PropsWithStyles<{

@@ -246,6 +246,60 @@ const base: ThemeProps = {
           },
         },
       },
+      AutoComplete: {
+        name: 'rbk-auto-complete',
+        defaultProps: {
+          color: 'primary',
+        },
+        defaultStyles: {
+          root: {
+            position: 'relative',
+            backgroundColor: 'background',
+            border: '1px solid gray.light',
+            borderRadius: (theme) => theme.shape.borderRadius,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            // overflow: 'hidden',
+            p: 0.5,
+          },
+          item: {
+            backgroundColor: 'background.secondary',
+            flexDirection: 'row',
+            flexWrap: 'noWrap',
+            alignItems: 'center',
+            corners: 1,
+            px: 2,
+            py: 1,
+            m: 0.5,
+          },
+          input: {
+            backgroundColor: 'trans',
+            borderWidth: 0,
+            color: 'text.primary',
+            flex: 1,
+            fontSize: '1rem',
+            textDecorationLine: 'none',
+
+            p: 1,
+            m: 0,
+
+            web: {
+              backgroundImage: 'none',
+              boxShadow: 'none',
+              cursor: 'text',
+              // lineHeight: '1rem',
+              outline: '0 !important',
+
+              '-moz-appearance': 'textfield',
+              appearance: 'textfield',
+              '&::-webkit-outer-spin-button,::-webkit-inner-spin-button': {
+                '-webkit-appearance': 'none',
+                appearance: 'none',
+              },
+            },
+          },
+        },
+      },
       Avatar: {
         name: 'rbk-avatar',
         defaultProps: {

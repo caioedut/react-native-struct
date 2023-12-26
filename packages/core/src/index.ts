@@ -79,6 +79,8 @@ export { default as createMeta } from './createMeta';
 /** @internal */
 export { default as ActionSheetFactory } from './factory/ActionSheetFactory';
 /** @internal */
+export { default as AutoCompleteFactory } from './factory/AutoCompleteFactory';
+/** @internal */
 export { default as AvatarFactory } from './factory/AvatarFactory';
 /** @internal */
 export { default as AnimationFactory } from './factory/AnimationFactory';

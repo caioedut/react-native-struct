@@ -1,6 +1,7 @@
 import ReactBulk, {
   ActionSheetFactory,
   AnimationFactory,
+  AutoCompleteFactory,
   AvatarFactory,
   BackdropFactory,
   BadgeFactory,
@@ -110,6 +111,7 @@ global.mapping = {
 } as RbkMap;
 
 export const ActionSheet = ActionSheetFactory;
+export const AutoComplete = AutoCompleteFactory;
 export const Avatar = AvatarFactory;
 export const Animation = AnimationFactory;
 export const Backdrop = BackdropFactory;

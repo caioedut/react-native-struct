@@ -141,7 +141,7 @@ const TerminalFactory = React.memo<TerminalProps>(
               addMessage(response);
             }
           } catch (err) {
-            addMessage(`Error: ${err.message}`, { color: 'error' });
+            addMessage(`Error: ${(err as Error).message}`, { color: 'error' });
           }
         } else {
           addMessage(`Unknown command: ${command}`, { color: 'error' });

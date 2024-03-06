@@ -1,13 +1,7 @@
 {
-  "command": {
-    "publish": {
-      "allowBranch": "main"
-    }
-  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "npmClient": "yarn",
-  "packages": ["packages/*"],
-  "registry": "https://registry.npmjs.org",
+  "version": "0.8.2",
   "useNx": false,
-  "useWorkspaces": true,
-  "version": "0.6.5"
+  "packages": ["packages/*"]
 }

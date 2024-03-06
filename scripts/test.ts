@@ -2,10 +2,10 @@ import pmex from 'pmex';
 
 const dirs = ['packages/core', 'packages/web', 'packages/native'];
 
-for (const dir of dirs) {
-  pmex(`prettier "${dir}/src/**/*.{js,jsx,ts,tsx}" --check`);
+for (const cwd of dirs) {
+  pmex('prettier "./src/**/*.{js,jsx,ts,tsx}" --check', { cwd });
 
-  // pmex(`eslint "${dir}/src/**/*.{js,jsx,ts,tsx}" --max-warnings=0`);
+  // pmex('eslint "./src/**/*.{js,jsx,ts,tsx}" --max-warnings=0', { cwd });
 
-  pmex(`yarn --cwd ${dir} tsc --noEmit --skipLibCheck`);
+  pmex('tsc --noEmit --skipLibCheck', { cwd });
 }

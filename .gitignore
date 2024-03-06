@@ -1,35 +1,65 @@
-# ide
-.idea/
-.vscode/
+# Monorepo sync files
+packages/**/*.md
 
-# dependencies
-node_modules/
-.pnp
-.pnp.js
+# Env
+.env*.local
 
-# testing
-coverage/
-
-# npm
-yarn.lock
-package-lock.json
+# Log
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
 
-# typescript
+# Dependency
+web_modules/
+node_modules/
+jspm_packages/
+bower_components/
+
+# Lockfile
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+
+# TypeScript
 *.tsbuildinfo
+expo-env.d.ts
 next-env.d.ts
 
-# temp
-.eslintcache
+# Distribution
+out
+dist
+build
+package
+coverage
+web-build
+
+# Cache
+.npm
+.next
+.nuxt
+.expo
+.temp
+.cache
+.vercel
 .DS_Store
-.expo/
-.next/
-.docusaurus/
-.cache-loader/
-typings/
-build/
-dist/
-out/
-web-build/
+.docusaurus
+.svelte-kit
+.eslintcache
+.cache-loader
+.parcel-cache
+.stylelintcache
+%ProgramData%
+
+# IDE
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

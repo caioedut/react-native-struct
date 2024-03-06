@@ -15,29 +15,16 @@ const BackdropFactory = React.memo<BackdropProps>(
     // Extends from default props
     const {
       visible,
+      // Events
+      onPress,
       // Styles
       variants,
+      containerStyle,
       ...rest
     } = factory2<BackdropProps>(props, options);
 
     const defaultRef = useRef(null);
     ref = ref || defaultRef;
-
-    const containerProps: any = {};
-
-    if (web) {
-      containerProps.onPress = (e) => e.stopPropagation();
-    }
-
-    if (native) {
-      containerProps.onStartShouldSetResponder = () => true;
-      containerProps.onTouchEnd = (e) => e.stopPropagation();
-
-      if (!rest.component) {
-        rest.component = Button;
-        rest.activeOpacity = 1;
-      }
-    }
 
     useEffect(() => {
       if (!web) return;
@@ -57,27 +44,47 @@ const BackdropFactory = React.memo<BackdropProps>(
       };
     }, [ref, visible]);
 
-    if (native) {
-      return (
-        <Dialog
-          transparent
-          statusBarTranslucent
-          visible={Boolean(visible)}
-          animationType="fade"
-          presentationStyle="overFullScreen"
-        >
-          <BoxFactory ref={ref} stylist={[variants.root, stylist]} {...rest} {...containerProps}>
-            {children}
-          </BoxFactory>
-        </Dialog>
-      );
-    }
+    const Child = (
+      <BoxFactory ref={ref} stylist={[variants.root, stylist]} {...rest}>
+        <BoxFactory position="absolute" i={0} zIndex={-1} style={{ cursor: 'auto' }} onPress={onPress} />
+        {children}
+      </BoxFactory>
+    );
 
-    return (
-      <BoxFactory ref={ref} component={Dialog} tabIndex="-1" stylist={[variants.root, stylist]} {...rest}>
-        <BoxFactory maxh="100%" maxw="100%" style={{ cursor: 'auto' }} {...containerProps}>
-          {children}
-        </BoxFactory>
+    return native ? (
+      <Dialog
+        transparent
+        statusBarTranslucent
+        visible={Boolean(visible)}
+        animationType="fade"
+        presentationStyle="overFullScreen"
+      >
+        {Child}
+      </Dialog>
+    ) : (
+      <BoxFactory
+        noRootStyles
+        component={Dialog}
+        tabIndex="-1"
+        style={[
+          {
+            position: 'fixed',
+            inset: 0,
+            cursor: 'auto !important',
+            opacity: 0,
+            visibility: 'hidden',
+            zIndex: -1,
+            ...theme.mixins.transitions.medium,
+            transitionProperty: 'all',
+          },
+          visible && {
+            opacity: 1,
+            visibility: 'visible',
+            zIndex: theme.mixins.zIndex.backdrop,
+          },
+        ]}
+      >
+        {Child}
       </BoxFactory>
     );
   }),

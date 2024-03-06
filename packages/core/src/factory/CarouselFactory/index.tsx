@@ -30,7 +30,7 @@ const CarouselFactory = React.memo<CarouselProps>(
       color,
       gap,
       pagingEnabled,
-      swipe,
+      pointerScroll,
       // Column Count
       xs,
       sm,
@@ -39,10 +39,11 @@ const CarouselFactory = React.memo<CarouselProps>(
       xl,
       // Styles
       variants,
+      itemStyle,
       chevronStyle,
       style,
       ...rest
-    } = factory2<RequiredSome<CarouselProps, 'chevron' | 'color' | 'gap' | 'pagingEnabled' | 'swipe' | 'xs'>>(
+    } = factory2<RequiredSome<CarouselProps, 'chevron' | 'color' | 'gap' | 'pagingEnabled' | 'pointerScroll' | 'xs'>>(
       props,
       options,
     );
@@ -55,7 +56,7 @@ const CarouselFactory = React.memo<CarouselProps>(
     const [hasPrev, setHasPrev] = useState(false);
     const [hasNext, setHasNext] = useState(false);
 
-    const showChevron = chevron !== 'hidden';
+    const showChevron = chevron && chevron !== 'hidden';
     gap = gap === true ? theme.shape.gap : gap;
 
     const scrollByCount = useCallback(
@@ -68,7 +69,7 @@ const CarouselFactory = React.memo<CarouselProps>(
 
         scrollTo(contentRef.current, count * size + offsetRef.current);
       },
-      [contentWidth],
+      [contentWidth, web],
     );
 
     const scrollToPrev = useCallback(() => {
@@ -98,10 +99,10 @@ const CarouselFactory = React.memo<CarouselProps>(
 
         offsetRef.current = scrollLeft;
 
-        setHasPrev(scrollLeft > 0);
-        setHasNext(scrollOverflowWidth > scrollLeft);
+        setHasPrev(scrollLeft - 10 > 0);
+        setHasNext(scrollOverflowWidth > scrollLeft + 10);
       },
-      [contentRef, native, web],
+      [native, web],
     );
 
     useLayoutEffect(() => {
@@ -119,7 +120,7 @@ const CarouselFactory = React.memo<CarouselProps>(
     }, [contentRef, contentWidth]);
 
     useEffect(() => {
-      if (!web || !contentRef.current) return;
+      if (!web || !pointerScroll || !contentRef.current) return;
 
       return event(contentRef.current, 'wheel', (e) => {
         if (e.deltaY > 0 && hasNext) {
@@ -132,7 +133,7 @@ const CarouselFactory = React.memo<CarouselProps>(
           scrollToPrev();
         }
       });
-    }, [contentRef, hasPrev, hasNext, web, scrollToNext, scrollToPrev]);
+    }, [contentRef, hasPrev, hasNext, scrollToNext, scrollToPrev, pointerScroll, web]);
 
     if (native) {
       Object.assign(rest, {
@@ -142,13 +143,38 @@ const CarouselFactory = React.memo<CarouselProps>(
     }
 
     const base = contentWidth ?? 100;
-    const itemStyle = {
-      xs: { width: base / xs },
-      sm: { width: base / (sm ?? xs) },
-      md: { width: base / (md ?? sm ?? xs) },
-      lg: { width: base / (lg ?? md ?? sm ?? xs) },
-      xl: { width: base / (xl ?? lg ?? md ?? sm ?? xs) },
-    };
+
+    const xsValue = typeof xs === 'number' || xs === 'auto' ? xs : 'auto';
+    const smValue = typeof sm === 'number' || sm === 'auto' ? sm : xsValue;
+    const mdValue = typeof md === 'number' || md === 'auto' ? md : smValue;
+    const lgValue = typeof lg === 'number' || lg === 'auto' ? lg : mdValue;
+    const xlValue = typeof xl === 'number' || xl === 'auto' ? xl : lgValue;
+
+    itemStyle = [
+      itemStyle,
+      {
+        xs: {
+          width: typeof xsValue === 'number' ? base / Number(xsValue) : 'auto',
+          ...(xs && typeof xs === 'object' ? xs : {}),
+        },
+        sm: {
+          width: typeof smValue === 'number' ? base / Number(smValue) : 'auto',
+          ...(sm && typeof sm === 'object' ? sm : {}),
+        },
+        md: {
+          width: typeof mdValue === 'number' ? base / Number(mdValue) : 'auto',
+          ...(md && typeof md === 'object' ? md : {}),
+        },
+        lg: {
+          width: typeof lgValue === 'number' ? base / Number(lgValue) : 'auto',
+          ...(lg && typeof lg === 'object' ? lg : {}),
+        },
+        xl: {
+          width: typeof xlValue === 'number' ? base / Number(xlValue) : 'auto',
+          ...(xl && typeof xl === 'object' ? xl : {}),
+        },
+      },
+    ];
 
     const chevronProps = {
       color: theme.color(color),
@@ -175,17 +201,25 @@ const CarouselFactory = React.memo<CarouselProps>(
 
         {showChevron && hasPrev && (
           <BoxFactory l={0} stylist={[variants.chevron]}>
-            <ButtonFactory variant="outline" color={color} onPress={scrollToPrev} style={chevronStyle}>
-              <ChevronLeft svg={svg} {...chevronProps} />
-            </ButtonFactory>
+            {typeof chevron === 'function' ? (
+              chevron({ prev: true, next: false, color, onPress: scrollToPrev })
+            ) : (
+              <ButtonFactory variant="outline" color={color} onPress={scrollToPrev} style={chevronStyle}>
+                <ChevronLeft svg={svg} {...chevronProps} />
+              </ButtonFactory>
+            )}
           </BoxFactory>
         )}
 
         {showChevron && hasNext && (
           <BoxFactory r={0} stylist={[variants.chevron]}>
-            <ButtonFactory variant="outline" color={color} onPress={scrollToNext} style={chevronStyle}>
-              <ChevronRight svg={svg} {...chevronProps} />
-            </ButtonFactory>
+            {typeof chevron === 'function' ? (
+              chevron({ prev: false, next: true, color, onPress: scrollToNext })
+            ) : (
+              <ButtonFactory variant="outline" color={color} onPress={scrollToNext} style={chevronStyle}>
+                <ChevronRight svg={svg} {...chevronProps} />
+              </ButtonFactory>
+            )}
           </BoxFactory>
         )}
       </BoxFactory>

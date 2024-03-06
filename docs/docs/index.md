@@ -6,12 +6,6 @@ sidebar_position: 1
 
 Complete and uniform UI for React Web and Native
 
-<a href="https://www.buymeacoffee.com/caioedut" target="_blank">
-  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy Me A Coffee" width="180" height="50" />
-</a>
-
----
-
 ## Easy to Use
 Install the packages, import the components and you're done! That's it, no time wasted.
 
@@ -20,3 +14,10 @@ React Bulk allow you to customize all components and its defaults using theme. Y
 
 ## Web and Native
 Same design system, same components, same code, same EVERYTHING on your Web and Native applications.
+
+---
+
+### Sponsor
+<a href="https://www.buymeacoffee.com/caioedut" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy Me A Coffee" width="180" height="50" />
+</a>

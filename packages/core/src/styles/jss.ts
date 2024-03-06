@@ -6,6 +6,7 @@ import { RbkStyle, ThemeProps } from '../types';
 import clone from '../utils/clone';
 import global from '../utils/global';
 import { boxSizeProps, customSpacings, customStyleProps, flexAlignProps, notPxProps, spacings } from './constants';
+import transform from './transform';
 
 export { customSpacings, customStyleProps, spacings };
 
@@ -92,6 +93,11 @@ export default function jss(...mixin: any[]) {
       }
     }
 
+    // Resolve spacings "true" with "spacing" multiplier
+    if (customSpacings.includes(prop) && value === true && theme.spacing) {
+      value = theme.spacing(1);
+    }
+
     if (flexAlignProps.includes(prop) && valueTrim) {
       value = parseFlexAlign(valueTrim);
     }
@@ -107,6 +113,7 @@ export default function jss(...mixin: any[]) {
       value = parseUnit(value);
     }
 
+    // Resolve aliases
     prop =
       {
         w: 'width',
@@ -222,27 +229,19 @@ export default function jss(...mixin: any[]) {
 
     if (web) {
       if (prop === 'paddingVertical') {
-        prop = null;
-        styles.paddingTop = value;
-        styles.paddingBottom = value;
+        prop = 'paddingBlock';
       }
 
       if (prop === 'paddingHorizontal') {
-        prop = null;
-        styles.paddingLeft = value;
-        styles.paddingRight = value;
+        prop = 'paddingInline';
       }
 
       if (prop === 'marginVertical') {
-        prop = null;
-        styles.marginTop = value;
-        styles.marginBottom = value;
+        prop = 'marginBlock';
       }
 
       if (prop === 'marginHorizontal') {
-        prop = null;
-        styles.marginLeft = value;
-        styles.marginRight = value;
+        prop = 'marginInline';
       }
 
       if (prop === 'transform' && Array.isArray(value)) {
@@ -266,6 +265,26 @@ export default function jss(...mixin: any[]) {
     }
 
     if (native) {
+      if (prop === 'paddingBlock') {
+        prop = 'paddingVertical';
+      }
+
+      if (prop === 'paddingInline') {
+        prop = 'paddingHorizontal';
+      }
+
+      if (prop === 'marginBlock') {
+        prop = 'marginVertical';
+      }
+
+      if (prop === 'marginInline') {
+        prop = 'marginHorizontal';
+      }
+
+      if (prop === 'transform' && typeof value === 'string') {
+        value = transform(value);
+      }
+
       // Cast unit: vw
       const vwRegex = /([+-]?([0-9]*[.])?[0-9]+)vw/gi;
       if (vwRegex.test(valueTrim)) {

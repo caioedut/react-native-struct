@@ -44,11 +44,11 @@ const ListItemFactory = React.memo<ListItemProps>(
     chevron =
       chevron === true ? (
         <ChevronRight svg={svg} color={theme.color(chevronColor)} size={theme.rem(chevronSize || 1)} />
-      ) : (
+      ) : chevron ? (
         <TextFactory color={chevronColor} size={chevronSize}>
           {chevron}
         </TextFactory>
-      );
+      ) : null;
 
     return (
       <CardFactory ref={ref} p={gap} stylist={[variants?.root, stylist]} {...rest}>

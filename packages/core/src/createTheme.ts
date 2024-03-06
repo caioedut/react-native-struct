@@ -1,11 +1,10 @@
-import deepmerge from 'deepmerge';
-
 import createStyle from './createStyle';
 import extract from './props/extract';
 import base from './themes/base';
 import dark from './themes/dark';
 import light from './themes/light';
 import { ThemeEditProps, ThemeProps } from './types';
+import deepmerge from './utils/deepmerge';
 import global from './utils/global';
 
 export default function createTheme(options?: ThemeEditProps, extendsTo?: ThemeEditProps): ThemeProps | any {
@@ -15,10 +14,8 @@ export default function createTheme(options?: ThemeEditProps, extendsTo?: ThemeE
   const mode = options?.mode || extendsTo?.mode || 'light';
   const reference = mode === 'dark' ? dark : light;
 
-  const all = [base, extendsTo, reference, options, { mode }];
-
   // @ts-ignore
-  const newTheme: ThemeProps = deepmerge.all(all, { arrayMerge: (prev, next) => next });
+  const newTheme: ThemeProps = deepmerge(base, extendsTo, reference, options, { mode });
 
   // Parse colors
   if (newTheme.colors) {

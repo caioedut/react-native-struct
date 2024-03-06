@@ -1,23 +1,9 @@
-let currentGlobal: any = {};
+import { AnyObject } from '../types';
 
-if (typeof process !== 'undefined') {
-  currentGlobal = process;
-}
+const global: AnyObject = {
+  theme: {},
+  mapping: {},
+  styles: {},
+};
 
-if (typeof global !== 'undefined') {
-  currentGlobal = global;
-}
-
-if (typeof window !== 'undefined') {
-  currentGlobal = window;
-}
-
-if (!currentGlobal._RBK) {
-  currentGlobal._RBK = {
-    theme: {},
-    mapping: {},
-    styles: {},
-  } as any;
-}
-
-export default currentGlobal._RBK;
+export default global;

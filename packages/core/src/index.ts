@@ -9,6 +9,7 @@ export { default as useHtmlId } from './hooks/useHtmlId';
 export { default as usePropState } from './hooks/usePropState';
 export { default as useTheme } from './hooks/useTheme';
 export { default as useToaster } from './hooks/useToaster';
+export { default as unstable_useTransition } from './hooks/useTransition';
 
 // Prop
 /** @internal */
@@ -74,10 +75,9 @@ export { default as css } from './styles/css';
 export { default as createTheme } from './createTheme';
 export { default as createStyle } from './createStyle';
 export { default as createMeta } from './createMeta';
+export { default as createPortal } from './createPortal';
 
 // Factory
-/** @internal */
-export { default as ActionSheetFactory } from './factory/ActionSheetFactory';
 /** @internal */
 export { default as AutoCompleteFactory } from './factory/AutoCompleteFactory';
 /** @internal */
@@ -105,7 +105,7 @@ export { default as CheckboxFactory } from './factory/CheckboxFactory';
 /** @internal */
 export { default as CollapseFactory } from './factory/CollapseFactory';
 /** @internal */
-export { default as DatePickerFactory } from './factory/DatePickerFactory';
+export { default as InputDateFactory } from './factory/InputDateFactory';
 /** @internal */
 export { default as DividerFactory } from './factory/DividerFactory';
 /** @internal */
@@ -120,6 +120,8 @@ export { default as GridFactory } from './factory/GridFactory';
 export { default as ImageFactory } from './factory/ImageFactory';
 /** @internal */
 export { default as InputFactory } from './factory/InputFactory';
+/** @internal */
+export { default as InputPinFactory } from './factory/InputPinFactory';
 /** @internal */
 export { default as LabelFactory } from './factory/LabelFactory';
 /** @internal */

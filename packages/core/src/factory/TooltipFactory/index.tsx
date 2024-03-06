@@ -20,6 +20,7 @@ const TooltipFactory = React.memo<TooltipProps>(
     let {
       accessibility,
       color,
+      offset = native ? 2 : 1,
       position,
       title,
       visible,
@@ -105,13 +106,13 @@ const TooltipFactory = React.memo<TooltipProps>(
 
               native && !trans && { opacity: 0 },
 
-              isHorizontal && { mx: 1, transform: [{ translateY: translate }] },
-              !isHorizontal && { my: 0.5, transform: [{ translateX: translate }] },
+              isHorizontal && { transform: [{ translateY: translate }] },
+              !isHorizontal && { transform: [{ translateX: translate }] },
 
-              position === 'top' && { bottom: '100%' },
-              position === 'bottom' && { top: '100%' },
-              position === 'left' && { right: '100%' },
-              position === 'right' && { left: '100%' },
+              position === 'top' && { bottom: '100%', mb: offset },
+              position === 'bottom' && { top: '100%', mt: offset },
+              position === 'left' && { right: '100%', mr: offset },
+              position === 'right' && { left: '100%', ml: offset },
             ]}
           >
             {title}

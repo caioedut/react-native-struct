@@ -10,7 +10,12 @@ export default function useToaster() {
     (options: string | ToasterProps, color?: RbkColor) => {
       const content = typeof options === 'string' ? options : options?.content;
       const rest = typeof options === 'string' ? {} : options;
-      toasterRef?.current?.setProps({ ...rest, content, color });
+
+      toasterRef?.current?.setProps({
+        ...rest,
+        content,
+        color: color ?? rest?.color,
+      });
     },
     [toasterRef],
   );

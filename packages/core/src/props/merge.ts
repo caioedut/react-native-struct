@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 export default function merge(...mixin: unknown[]) {
   let result: any = {};
 

@@ -1,8 +1,7 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useReducer, useRef, useState } from 'react';
 
-import { AnyObject, FormRef, RbkInputEvent, useAnimation, useToaster } from '@react-bulk/core';
+import { AnyObject, FormRef, RbkInputEvent, unstable_useTransition, useAnimation, useToaster } from '@react-bulk/core';
 import {
-  ActionSheet,
   Animation,
   Avatar,
   Badge,
@@ -14,7 +13,6 @@ import {
   Carousel,
   Checkbox,
   Collapse,
-  DatePicker,
   Divider,
   Drawer,
   Dropdown,
@@ -22,6 +20,9 @@ import {
   Grid,
   Image,
   Input,
+  InputDate,
+  InputPin,
+  Label,
   List,
   ListItem,
   Loading,
@@ -112,10 +113,6 @@ export default function Main() {
 
       <Card mt={theme.shape.gap}>
         <DrawerExample />
-      </Card>
-
-      <Card mt={theme.shape.gap}>
-        <ActionSheetExample />
       </Card>
 
       <Card mt={theme.shape.gap}>
@@ -485,7 +482,7 @@ function ButtonExample() {
       <Text mt={theme.shape.gap} variant="subtitle">
         Group
       </Text>
-      <ButtonGroup mt={theme.shape.gap} p={1} variant="outline">
+      <ButtonGroup mt={theme.shape.gap} variant="outline">
         <Button>Button</Button>
         <Button disabled>Disabled</Button>
         <Button loading={loading} onPress={toggleLoading}>
@@ -535,6 +532,27 @@ function FormExample() {
       ))}
 
       <Input mt={theme.shape.gap} label="Multiline" placeholder="Multiline input" multiline />
+
+      <Divider mt={theme.shape.gap} mx={-theme.shape.gap} />
+
+      <Text mt={theme.shape.gap} variant="subtitle">
+        Input Pin
+      </Text>
+
+      <Grid gap mt={theme.shape.gap}>
+        <Box xs={12}>
+          <Label mb={1}>ALPHANUMERIC</Label>
+          <InputPin length={4} />
+        </Box>
+        <Box xs={12}>
+          <Label mb={1}>ALPHABETIC</Label>
+          <InputPin length={4} type="alphabetic" />
+        </Box>
+        <Box xs={12}>
+          <Label mb={1}>NUMERIC</Label>
+          <InputPin length={4} type="numeric" />
+        </Box>
+      </Grid>
 
       <Divider mt={theme.shape.gap} mx={-theme.shape.gap} />
 
@@ -839,9 +857,11 @@ function ModalExample() {
 
   return (
     <>
-      <Text variant="title">Modals</Text>
+      <Text variant="title" mb={theme.shape.gap}>
+        Modals
+      </Text>
 
-      <Grid gap mt={theme.shape.gap}>
+      <Grid gap>
         <Box>
           <Button onPress={() => setModal({ visible: true, valign: 'top' })}>Top</Button>
         </Box>
@@ -951,16 +971,28 @@ function DrawerExample() {
   const theme = useTheme();
 
   const [drawer, setDrawer] = useState(false);
+  const [placement, setPlacement] = useState('right');
+  const [style, setStyle] = useState({});
+
+  const handleOpen = (placement: string) => {
+    setDrawer(true);
+    setPlacement(placement);
+    setStyle(placement === 'top' || placement === 'bottom' ? {} : { w: 320 });
+  };
 
   return (
     <>
       <Text variant="title" mb={theme.shape.gap}>
         Drawer
       </Text>
-      <Box row>
-        <Button onPress={() => setDrawer(true)}>Drawer</Button>
-      </Box>
-      <Drawer visible={drawer} placement="right" maxw={320} onBackdropPress={() => setDrawer(false)}>
+      <Grid gap>
+        {placements.map((item) => (
+          <Box key={item}>
+            <Button onPress={() => handleOpen(item)}>{getLabel(item)}</Button>
+          </Box>
+        ))}
+      </Grid>
+      <Drawer visible={drawer} placement={placement as any} style={style} onBackdropPress={() => setDrawer(false)}>
         <Card>
           <Text>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</Text>
           <Text mt={theme.shape.gap}>
@@ -972,35 +1004,6 @@ function DrawerExample() {
           </Button>
         </Card>
       </Drawer>
-    </>
-  );
-}
-
-function ActionSheetExample() {
-  const theme = useTheme();
-
-  const [actionSheet, setActionSheet] = useState(false);
-
-  return (
-    <>
-      <Text variant="title" mb={theme.shape.gap}>
-        Action Sheet
-      </Text>
-      <Box row>
-        <Button onPress={() => setActionSheet(true)}>Action Sheet</Button>
-      </Box>
-
-      <ActionSheet visible={actionSheet} maxw={500} onClose={() => setActionSheet(false)}>
-        <Text>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</Text>
-        <Text mt={theme.shape.gap}>
-          A adipisci aliquid aspernatur, at autem deleniti dolorum, maiores nihil numquam officia omnis recusandae
-          soluta. Incidunt labore laboriosam maiores, praesentium quia tempore!
-        </Text>
-
-        <Button mt={theme.shape.gap}>Option X</Button>
-        <Button mt={theme.shape.gap}>Option Y</Button>
-        <Button mt={theme.shape.gap}>Option Z</Button>
-      </ActionSheet>
     </>
   );
 }
@@ -1069,21 +1072,6 @@ function TabsExample() {
 function ProgressExample() {
   const theme = useTheme();
 
-  const [percent, setPercent] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPercent((current) => {
-        const newValue = current + 1;
-        return newValue > 100 ? 0 : newValue;
-      });
-    }, 100);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
   return (
     <>
       <Text variant="title">Progress</Text>
@@ -1111,7 +1099,7 @@ function ProgressExample() {
       <Divider my={theme.shape.gap} mx={-theme.shape.gap} />
 
       <Text variant="subtitle">Bar with value</Text>
-      <Progress value={percent} mt={theme.shape.gap} />
+      <Progress value={Math.random() * 100} mt={theme.shape.gap} />
     </>
   );
 }
@@ -1138,10 +1126,13 @@ function CalendarExample() {
           <Text variant="subtitle">Date Picker</Text>
         </Box>
         <Box xs={12}>
-          <DatePicker name="calendar" label="Variant Modal (Default)" value={date} />
+          <InputDate name="calendar" label="Variant Modal (Default)" value={date} />
         </Box>
         <Box xs={12}>
-          <DatePicker variant="inline" name="calendar" label="Variant Inline" value={date} />
+          <InputDate variant="dropdown" name="calendar" label="Variant Dropdown" value={date} />
+        </Box>
+        <Box xs={12}>
+          <InputDate variant="inline" name="calendar" label="Variant Inline" value={date} />
         </Box>
         <Box xs={12}>
           <Button
@@ -1171,7 +1162,7 @@ function TooltipExample() {
         Hover/press texts below
       </Text>
       <Box row center>
-        {tooltips.map((pos) => (
+        {placements.map((pos) => (
           <Box key={pos} p={theme.shape.gap}>
             <Tooltip title="My tooltip" position={pos}>
               <Text>{getLabel(pos)}</Text>
@@ -1238,6 +1229,7 @@ function AnimationExample() {
   const to = { width: 200, height: 200 };
 
   const sizeAnim = useAnimation(from);
+  const transition = unstable_useTransition(from);
 
   return (
     <>
@@ -1263,10 +1255,15 @@ function AnimationExample() {
           <Button onPress={() => sizeAnim.start(to, { boomerang: true })}>Boomerang</Button>
         </Box>
         <Box>
-          <Button onPress={() => sizeAnim.start(to, { boomerang: true, iterations: 3 })}>3x Boomerang</Button>
+          <Button onPress={() => sizeAnim.start(to, { iterations: 'infinite' })}>Infinite</Button>
         </Box>
         <Box>
-          <Button onPress={() => sizeAnim.start(to, { boomerang: true, iterations: 'infinite' })}>Inifite</Button>
+          <Button onPress={() => sizeAnim.start(to, { boomerang: true, iterations: 3 })}>Boomerang 3x</Button>
+        </Box>
+        <Box>
+          <Button onPress={() => sizeAnim.start(to, { boomerang: true, iterations: 'infinite' })}>
+            Boomerang Infinite
+          </Button>
         </Box>
         <Box>
           <Button color="warning" onPress={() => sizeAnim.stop()}>
@@ -1285,6 +1282,50 @@ function AnimationExample() {
         </Box>
       </Grid>
 
+      <Divider my={theme.shape.gap} mx={-theme.shape.gap} />
+
+      <Text variant="subtitle" mb={theme.shape.gap}>
+        unstable_useTransition
+      </Text>
+      <Grid gap>
+        <Box>
+          <Button onPress={() => transition.start({ to, from })}>Forward</Button>
+        </Box>
+        <Box>
+          <Button onPress={() => transition.start({ to: from, from: to })}>Backward</Button>
+        </Box>
+        <Box>
+          <Button onPress={() => transition.start({ to, from, iterations: 3 })}>Repeat 3x</Button>
+        </Box>
+        <Box>
+          <Button onPress={() => transition.start({ to, from, boomerang: true })}>Boomerang</Button>
+        </Box>
+        <Box>
+          <Button onPress={() => transition.start({ to, from, iterations: -1 })}>Infinite</Button>
+        </Box>
+        <Box>
+          <Button onPress={() => transition.start({ to, from, boomerang: true, iterations: 3 })}>Boomerang 3x</Button>
+        </Box>
+        <Box>
+          <Button onPress={() => transition.start({ to, from, boomerang: true, iterations: -1 })}>
+            Boomerang Infinite
+          </Button>
+        </Box>
+        <Box>
+          <Button color="warning" onPress={() => transition.stop()}>
+            Stop
+          </Button>
+        </Box>
+        <Box>
+          <Button color="error" onPress={() => transition.reset()}>
+            Reset
+          </Button>
+        </Box>
+        <Box xs={12}>
+          <Box border="1px solid primary" align="start" {...transition.props} />
+        </Box>
+      </Grid>
+
       {animations.map((animation, key) => {
         const label = typeof animation === 'string' ? getLabel(animation) : 'Custom';
         const props = typeof animation === 'string' ? { [animation]: true } : animation;
@@ -1299,12 +1340,12 @@ function AnimationExample() {
               </Text>
               <Grid noWrap alignItems="center" gap={6}>
                 <Box>
-                  <Animation loop in {...props}>
+                  <Animation loop in {...props} duration={1000}>
                     <Image w={40} source="https://lirp.cdn-website.com/dbd26f15/dms3rep/multi/opt/fdd-640w.jpg" />
                   </Animation>
                 </Box>
                 <Box>
-                  <Animation loop in {...props}>
+                  <Animation loop in {...props} duration={1000}>
                     <Text>Anything</Text>
                   </Animation>
                 </Box>
@@ -1320,9 +1361,9 @@ function AnimationExample() {
 const colors = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const;
 const variants = ['solid', 'outline', 'text'] as const;
 const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
-const tooltips = ['top', 'bottom', 'left', 'right'] as const;
-const animations = ['spin', 'fade', 'zoom', { from: { top: -30, opacity: 0 }, to: { top: 0, opacity: 1 } }] as const;
+const placements = ['top', 'bottom', 'left', 'right'] as const;
 const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;
+const animations = ['spin', 'fade', 'zoom', { from: { opacity: 0, ml: -4 }, to: { opacity: 1, ml: 0 } }] as const;
 
 const formData = {
   firstName: 'Richard',

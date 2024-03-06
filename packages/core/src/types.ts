@@ -1,6 +1,6 @@
 import { CSSProperties, JSXElementConstructor, ReactNode, Ref, RefObject, SyntheticEvent } from 'react';
 
-import { styleProps } from './styles/constants';
+import { customSpacings, styleProps } from './styles/constants';
 
 /****************************
  * FOR INTERNAL USE (START) *
@@ -23,8 +23,8 @@ type RecursivePartial<T> = {
   [P in keyof T]?: T[P] extends (infer U)[]
     ? RecursivePartial<U>[]
     : T[P] extends object | undefined
-    ? RecursivePartial<T[P]>
-    : T[P];
+      ? RecursivePartial<T[P]>
+      : T[P];
 };
 
 /** @internal */
@@ -67,9 +67,14 @@ type FlexAlignValues =
 
 /** @internal */
 type StyleProps = Overwrite<
-  Partial<{
-    [K in (typeof styleProps)[number]]: any;
-  }>,
+  Overwrite<
+    {
+      [K in (typeof styleProps)[number]]?: any;
+    },
+    {
+      [K in (typeof customSpacings)[number]]?: number | string | true;
+    }
+  >,
   {
     position?: 'relative' | 'absolute' | (string & {});
 
@@ -101,28 +106,6 @@ type StyleProps = Overwrite<
     border?: string | number | boolean;
     corners?: number;
     shadow?: number;
-
-    i?: number | string;
-    t?: number | string;
-    b?: number | string;
-    l?: number | string;
-    r?: number | string;
-    m?: number | string;
-    mt?: number | string;
-    mb?: number | string;
-    ml?: number | string;
-    mr?: number | string;
-    mh?: number | string;
-    mx?: number | string;
-    mv?: number | string;
-    my?: number | string;
-    p?: number | string;
-    pt?: number | string;
-    pb?: number | string;
-    pl?: number | string;
-    pr?: number | string;
-    px?: number | string;
-    py?: number | string;
   }
 >;
 
@@ -161,9 +144,11 @@ export type ReactElement = ReactNode | ReactNode[] | JSX.Element | JSX.Element[]
 
 export type AnyObject = { [key: string | number]: any };
 
+export type AnyCallback = (...args: any[]) => any;
+
 export type TimeoutType = ReturnType<typeof setTimeout> | null;
 
-export type AnyCallback = (...args: any[]) => any;
+export type IntervalType = ReturnType<typeof setInterval> | null;
 
 export type InputValue = any;
 
@@ -233,6 +218,18 @@ export interface RbkAnimation {
 
   /** @deprecated use duration instead */
   speed?: number;
+}
+
+export interface RbkTransition {
+  to: Omit<RbkStyleProps, 'transform'>;
+  from?: Omit<RbkStyleProps, 'transform'>;
+
+  boomerang?: boolean;
+  delay?: number;
+  duration?: number;
+  iterations?: number | 'infinite';
+  throttle?: number;
+  timing?: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out';
 }
 
 export interface RbkFormEvent {
@@ -350,6 +347,8 @@ export type FormRef = {
 };
 
 export type RbkStyle = RbkStyleVar | RbkStyleVar[];
+
+export type RbkStyleProps = CSSProperties & StyleProps;
 
 export type ThemeModeValues = 'light' | 'dark';
 
@@ -476,7 +475,6 @@ export type ThemeProps = {
   contrast: (color: RbkColor, lightColor?: string | null, darkColor?: string | null) => string;
 
   components: {
-    ActionSheet: ThemeComponentProps<ActionSheetProps, 'root'>;
     AutoComplete: ThemeComponentProps<AutoCompleteProps, 'root' | 'item' | 'input'>;
     Avatar: ThemeComponentProps<AvatarProps, 'root' | 'content'>;
     Animation: ThemeComponentProps<AnimationProps, 'root'>;
@@ -490,7 +488,7 @@ export type ThemeProps = {
     Carousel: ThemeComponentProps<CarouselProps, 'root' | 'content' | 'chevron'>;
     Checkbox: ThemeComponentProps<CheckboxProps, 'root' | 'button'>;
     Collapse: ThemeComponentProps<CollapseProps, 'root'>;
-    DatePicker: ThemeComponentProps<DatePickerProps, 'root'>;
+    InputDate: ThemeComponentProps<InputDateProps, 'root'>;
     Divider: ThemeComponentProps<DividerProps, 'root'>;
     Drawer: ThemeComponentProps<DrawerProps, 'root' | 'backdrop'>;
     Dropdown: ThemeComponentProps<DropdownProps, 'root' | 'backdrop'>;
@@ -498,6 +496,7 @@ export type ThemeProps = {
     Grid: ThemeComponentProps<GridProps, 'root' | 'item'>;
     Image: ThemeComponentProps<ImageProps, 'root'>;
     Input: ThemeComponentProps<InputProps, 'root' | 'content' | 'label' | 'input' | 'hint' | 'error'>;
+    InputPin: ThemeComponentProps<InputPinProps, 'root'>;
     Label: ThemeComponentProps<LabelProps, 'root'>;
     Link: ThemeComponentProps<LinkProps, 'root'>;
     List: ThemeComponentProps<ListProps, 'root'>;
@@ -586,8 +585,8 @@ export type TextProps = PropsWithStyles<{
   justify?: boolean;
   bold?: boolean;
   italic?: boolean;
-  smallCaps?: boolean;
   selectable?: boolean;
+  smallCaps?: boolean;
   weight?: 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900' | (string & {});
   transform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase' | 'full-width';
   numberOfLines?: number;
@@ -688,6 +687,7 @@ export type InputProps = PropsWithStyles<
     readOnly?: boolean;
     returnKeyType?: 'default' | 'done' | 'go' | 'next' | 'search' | 'send';
     rows?: number;
+    secure?: boolean;
     selectionColor?: RbkColor;
     selectTextOnFocus?: boolean;
     size?: RbkSize;
@@ -808,28 +808,40 @@ export type SliderProps = PropsWithStyles<
 export type CardProps = PropsWithStyles<{}>;
 
 export type CarouselProps = PropsWithStyles<{
-  chevron?: 'visible' | 'hidden';
+  chevron?:
+    | boolean
+    | 'visible'
+    | 'hidden'
+    | ((options: { prev: boolean; next: boolean; color: RbkColor; onPress: Function }) => ReactElement);
   color?: RbkColor;
   gap?: number | true;
   pagingEnabled?: boolean;
-  swipe?: false;
+  pointerScroll?: boolean;
   // Column Count
-  xs?: number;
-  sm?: number;
-  md?: number;
-  lg?: number;
-  xl?: number;
+  xs?: number | 'auto' | RbkStyle;
+  sm?: number | 'auto' | RbkStyle;
+  md?: number | 'auto' | RbkStyle;
+  lg?: number | 'auto' | RbkStyle;
+  xl?: number | 'auto' | RbkStyle;
   // Styles
+  itemStyle?: RbkStyle;
   chevronStyle?: { color?: RbkColor; size?: number } & RbkStyle;
 }>;
 
-export type DatePickerProps = PropsWithStyles<
+export type InputDateProps = PropsWithStyles<
   InputProps,
   {
+    // format?: 'Y-M-D' | 'Y/M/D' | 'D-M-Y' | 'D/M/Y' | 'M-D-Y' | 'M/D/Y';
+    locale?: Intl.LocalesArgument;
+    format?: {
+      month?: 'long' | 'narrow' | 'numeric' | 'short' | '2-digit';
+      day?: 'numeric' | '2-digit';
+      year?: 'numeric' | '2-digit';
+    };
     max?: Date | string | number | null | undefined;
     min?: Date | string | number | null | undefined;
     value?: Date | string | number | null | undefined;
-    variant?: 'modal' | 'inline';
+    variant?: 'modal' | 'inline' | 'dropdown';
     translate?: {
       cancel?: string;
       clear?: string;
@@ -905,6 +917,7 @@ export type CollapseProps = PropsWithStyles<{
 
 export type DropdownProps = PropsWithStyles<{
   placement?: 'top' | 'bottom';
+  triggerRef?: RefObject<ReactElement>;
   visible?: boolean;
   // Events
   onClose?: Function;
@@ -953,15 +966,10 @@ export type FormProps = PropsWithStyles<{
 
 export type TooltipProps = PropsWithStyles<{
   color?: 'black' | 'white' | RbkColor;
+  offset?: number | string;
   position?: 'top' | 'bottom' | 'left' | 'right';
   title?: string;
   visible?: boolean;
-}>;
-
-export type ActionSheetProps = PropsWithStyles<{
-  visible?: boolean;
-  // Events
-  onClose?: Function;
 }>;
 
 export type AnimationProps = PropsWithStyles<{
@@ -971,6 +979,7 @@ export type AnimationProps = PropsWithStyles<{
   from?: RbkStyle;
   in?: boolean;
   loop?: boolean | number;
+  throttle?: number;
   timing?: 'ease' | 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
   to?: RbkStyle;
 
@@ -1079,7 +1088,7 @@ export type AvatarProps = PropsWithStyles<{
   corners?: number;
   placeholder?: ReactElement;
   size?: number;
-  source: { uri?: string } | (string & {}) | (number & {});
+  source?: { uri?: string } | (string & {}) | (number & {});
   // Styles
   contentStyle?: RbkStyle;
 }>;
@@ -1102,6 +1111,37 @@ export type ListProps = PropsWithStyles<
     renderDelay?: number;
     rowHeight?: number;
     rowFallbackComponent?: JSXElementConstructor<any> | string;
+  }
+>;
+
+export type InputPinProps = PropsWithStyles<
+  Pick<
+    InputProps,
+    | 'autoFocus'
+    | 'color'
+    | 'colorful'
+    | 'defaultValue'
+    | 'disabled'
+    | 'name'
+    | 'notNull'
+    | 'placeholder'
+    | 'placeholderColor'
+    | 'readOnly'
+    | 'returnKeyType'
+    | 'secure'
+    | 'size'
+    | 'textColor'
+    | 'value'
+    // Styles
+    | 'inputStyle'
+    // Events
+    | 'onChange'
+    | 'onSubmit'
+    | 'onFormChange'
+  >,
+  {
+    length?: number;
+    type?: 'alphanumeric' | 'alphabetic' | 'numeric';
   }
 >;
 

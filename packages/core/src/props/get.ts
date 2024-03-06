@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 export default function get(prop: string, ...mixin: unknown[]) {
   let result: any;
 

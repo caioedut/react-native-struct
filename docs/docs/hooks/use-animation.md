@@ -35,7 +35,7 @@ function App() {
         <Button onPress={() => sizeAnim.start(to, { boomerang: true, iterations: 3 })}>3x Boomerang</Button>
       </Box>
       <Box>
-        <Button onPress={() => sizeAnim.start(to, { boomerang: true, iterations: 'infinite' })}>Inifite</Button>
+        <Button onPress={() => sizeAnim.start(to, { boomerang: true, iterations: 'infinite' })}>Infinite</Button>
       </Box>
       <Box>
         <Button color="warning" onPress={() => sizeAnim.stop()}>

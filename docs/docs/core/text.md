@@ -133,6 +133,16 @@ Sets `textAlign` style to `right`.
 
 ---
 
+### **`selectable`**
+
+Lets the user select text.
+
+By default, the web allows selection and native does not.
+
+➤ Type: **`boolean`** <br/>
+
+---
+
 ### **`smallCaps`**
 
 Sets `fontVariant` style to `small-caps`.

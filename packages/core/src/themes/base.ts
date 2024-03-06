@@ -1,6 +1,5 @@
-import { defined } from '@react-bulk/core';
-
 import { ThemeProps } from '../types';
+import defined from '../utils/defined';
 import stdout from '../utils/stdout';
 import string from '../utils/string';
 
@@ -233,19 +232,6 @@ const base: ThemeProps = {
 
   get components(): ThemeProps['components'] {
     return {
-      ActionSheet: {
-        name: 'rbk-action-sheet',
-        defaultProps: {},
-        defaultStyles: {
-          root: {
-            align: 'center',
-            corners: 3,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-            maxh: '100%',
-          },
-        },
-      },
       AutoComplete: {
         name: 'rbk-auto-complete',
         defaultProps: {
@@ -346,46 +332,11 @@ const base: ThemeProps = {
         },
         defaultStyles: {
           root: {
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-
+            position: 'absolute',
+            inset: 0,
             height: '100%',
             width: '100%',
-
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
-
-            native: {
-              position: 'absolute',
-            },
-
-            web: {
-              position: 'fixed',
-              cursor: 'auto !important',
-              opacity: 0,
-              visibility: 'hidden',
-              zIndex: -1,
-              ...this.mixins.transitions.medium,
-              transitionProperty: 'all',
-            },
-          },
-        },
-        variants: {
-          visible: {
-            true: {
-              root: {
-                web: {
-                  opacity: 1,
-                  visibility: 'visible',
-                  zIndex: (theme) => theme.mixins.zIndex.backdrop,
-                },
-              },
-            },
           },
         },
       },
@@ -497,6 +448,7 @@ const base: ThemeProps = {
             fontSize: '0.75rem',
             fontWeight: 'bold',
             letterSpacing: 1,
+            textAlign: 'center',
 
             web: {
               lineHeight: '0.75rem',
@@ -588,7 +540,6 @@ const base: ThemeProps = {
         },
         defaultStyles: {
           root: {
-            p: 1,
             m: -1,
           },
           content: {
@@ -596,6 +547,7 @@ const base: ThemeProps = {
             flexDirection: 'row',
             flexWrap: 'nowrap',
             alignItems: 'stretch',
+            p: 1,
           },
         },
       },
@@ -622,11 +574,11 @@ const base: ThemeProps = {
       Carousel: {
         name: 'rbk-carousel',
         defaultProps: {
-          chevron: 'visible',
+          chevron: true,
           color: 'primary',
           gap: 0,
           pagingEnabled: true,
-          swipe: false,
+          pointerScroll: true,
           xs: 1,
           chevronStyle: { px: 0 },
         },
@@ -675,21 +627,6 @@ const base: ThemeProps = {
           },
         },
       },
-      DatePicker: {
-        name: 'rbk-date-picker',
-        defaultProps: {
-          color: 'primary',
-          size: 'medium',
-          translate: {
-            cancel: 'Cancel',
-            clear: 'Clear',
-            today: 'Today',
-          },
-        },
-        defaultStyles: {
-          root: {},
-        },
-      },
       Divider: {
         name: 'rbk-divider',
         defaultProps: {
@@ -728,23 +665,22 @@ const base: ThemeProps = {
             bg: 'background',
             maxh: '100%',
             maxw: '100%',
-            ...this.mixins.transitions.fast,
           },
           backdrop: {},
         },
         variants: {
           placement: {
             left: {
-              root: { top: 0, left: 0, height: '100%', ml: '-100%' },
+              root: { top: 0, left: 0, height: '100%' },
             },
             right: {
-              root: { top: 0, right: 0, height: '100%', mr: '-100%' },
+              root: { top: 0, right: 0, height: '100%' },
             },
             top: {
-              root: { top: 0, left: 0, width: '100%', mt: '-100%' },
+              root: { top: 0, left: 0, width: '100%' },
             },
             bottom: {
-              root: { bottom: 0, left: 0, width: '100%', mb: '-100%' },
+              root: { bottom: 0, left: 0, width: '100%' },
             },
           },
         },
@@ -760,6 +696,10 @@ const base: ThemeProps = {
             position: 'absolute',
           },
           backdrop: {
+            justifyContent: 'flex-start',
+            justifyItems: 'flex-start',
+            alignContent: 'flex-start',
+            alignItems: 'flex-start',
             bg: 'rgba(0, 0, 0, 0.2)',
             zIndex: (theme) => theme.mixins.zIndex.dropdown,
           },
@@ -901,6 +841,32 @@ const base: ThemeProps = {
               },
             },
           },
+        },
+      },
+      InputDate: {
+        name: 'rbk-input-date',
+        defaultProps: {
+          color: 'primary',
+          size: 'medium',
+          translate: {
+            cancel: 'Cancel',
+            clear: 'Clear',
+            today: 'Today',
+          },
+        },
+        defaultStyles: {
+          root: {},
+        },
+      },
+      InputPin: {
+        name: 'rbk-pin-input',
+        defaultProps: {
+          length: 4,
+          size: 'medium',
+          type: 'alphanumeric',
+        },
+        defaultStyles: {
+          root: {},
         },
       },
       Label: {
@@ -1197,7 +1163,6 @@ const base: ThemeProps = {
         },
         defaultStyles: {
           root: {
-            p: 1,
             m: -1,
           },
           content: {
@@ -1205,6 +1170,7 @@ const base: ThemeProps = {
             flexWrap: 'nowrap',
             alignItems: 'stretch',
             justifyContent: 'start',
+            p: 1,
           },
           button: {
             web: { transitionProperty: 'all' },
@@ -1310,13 +1276,13 @@ const base: ThemeProps = {
             true: { root: { web: { fontVariant: 'small-caps' }, native: { fontVariant: ['small-caps'] } } },
             false: { root: { web: { fontVariant: 'initial' }, native: { fontVariant: [] } } },
           },
-          numberOfLines: {
-            1: {
+          selectable: {
+            false: {
               root: {
                 web: {
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  '-webkit-user-select': 'none',
+                  '-ms-user-select': 'none',
+                  'user-select': 'none',
                 },
               },
             },

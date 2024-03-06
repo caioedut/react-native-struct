@@ -1,3 +1,7 @@
+---
+sidebar_position: 5
+---
+
 # Input
 
 Used to create interactive controls for forms to accept user data.
@@ -313,6 +317,14 @@ The highlight and cursor color of the text input.
 
 ➤ Type: **`string`** <br/>
 ➤ Default: **`props.color`**
+
+---
+
+### **`selectTextOnFocus`**
+
+If `true`, all text will automatically be selected on focus.
+
+➤ Type: **`boolean`** <br/>
 
 ---
 

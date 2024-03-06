@@ -1,4 +1,4 @@
-import { AnyObject } from '@react-bulk/core';
+import { AnyObject } from '../types';
 
 export default function only(props: string | string[], ...mixin: AnyObject[]) {
   let result = {};

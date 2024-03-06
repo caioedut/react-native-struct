@@ -1,27 +1,36 @@
 {
   "name": "@react-bulk/core",
-  "version": "0.6.5",
   "description": "React Bulk Core",
-  "author": "CaioEduT <caioedut@gmail.com>",
-  "homepage": "https://github.com/caioedut/react-bulk",
+  "version": "0.8.2",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "types": "typings/index.d.ts",
-  "directories": {
-    "lib": "src"
+  "homepage": "https://rbk.caioedut.com",
+  "repository": "https://github.com/caioedut/react-bulk",
+  "author": {
+    "name": "Caio Teixeira",
+    "email": "caioedut@gmail.com"
   },
-  "files": [
-    "dist",
-    "typings"
+  "keywords": [
+    "react",
+    "react-native",
+    "react-component",
+    "web",
+    "native",
+    "android",
+    "ios",
+    "cross-platform",
+    "ui",
+    "ux"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/caioedut/react-bulk.git"
-  },
-  "scripts": {},
-  "dependencies": {
-    "deepmerge": ">=3.0.0"
+  "type": "commonjs",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "alias": {
+    "process": false
   },
   "peerDependencies": {
     "react": ">=16.8.0"

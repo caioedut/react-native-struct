@@ -14,7 +14,7 @@ import { Tooltip } from '@react-bulk/web'; // OR @react-bulk/native
 ### Basic
 
 ```jsx live
-<Box row>
+<Box row center>
   <Tooltip title="Add to cart">
     <Button circular>+</Button>
   </Tooltip>
@@ -88,6 +88,14 @@ Extends all [`Text`](/docs/core/text#props) props.
 
 ➤ Type: **`string` [`RbkColor`](/docs/type-reference/rbk-color)** <br/>
 ➤ Default: **`black`** <br/>
+
+---
+
+### **`offset`**
+
+➤ Type: **`number` `string`** <br/>
+➤ Default Web: **`1`** <br/>
+➤ Default Native: **`2`** <br/>
 
 ---
 

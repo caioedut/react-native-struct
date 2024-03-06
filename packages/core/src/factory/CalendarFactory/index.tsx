@@ -155,8 +155,8 @@ const CalendarFactory = React.memo<CalendarProps>(
             const isDisabled = Array.isArray(disableds)
               ? disableds.some((disabledDate) => dateify(disabledDate).toISOString().substring(0, 10) === dateISO)
               : disableds instanceof Function
-              ? disableds(date)
-              : false;
+                ? disableds(date)
+                : false;
 
             return (
               <BoxFactory key={date.toISOString()} xs={1}>

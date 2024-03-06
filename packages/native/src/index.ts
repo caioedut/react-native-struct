@@ -2,6 +2,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  NativeModules,
   Platform,
   Image as RNImage,
   Modal as RNModal,
@@ -16,7 +17,6 @@ import {
 } from 'react-native';
 
 import ReactBulk, {
-  ActionSheetFactory,
   AnimationFactory,
   AvatarFactory,
   BackdropFactory,
@@ -29,14 +29,15 @@ import ReactBulk, {
   CarouselFactory,
   CheckboxFactory,
   CollapseFactory,
-  DatePickerFactory,
   DividerFactory,
   DrawerFactory,
   DropdownFactory,
   FormFactory,
   GridFactory,
   ImageFactory,
+  InputDateFactory,
   InputFactory,
+  InputPinFactory,
   LabelFactory,
   LinkFactory,
   ListFactory,
@@ -46,6 +47,7 @@ import ReactBulk, {
   OutlineFactory,
   ProgressFactory,
   RbkMap,
+  RbkTheme,
   ScrollableFactory,
   SelectFactory,
   SliderFactory,
@@ -55,7 +57,7 @@ import ReactBulk, {
   TextFactory,
   TooltipFactory,
   global,
-  useTheme,
+  useTheme as useCoreTheme,
 } from '@react-bulk/core';
 import Svg, {
   Circle,
@@ -86,6 +88,12 @@ global.mapping = {
   native: true,
   ios: Platform.OS === 'ios',
   android: Platform.OS === 'android',
+
+  locale:
+    (Platform.OS === 'ios'
+      ? NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0]
+      : NativeModules.I18nManager.localeIdentifier
+    )?.replace(/_/, '-') || null,
 
   useDimensions,
 
@@ -140,7 +148,6 @@ global.mapping = {
   },
 } as RbkMap;
 
-export const ActionSheet = ActionSheetFactory;
 export const Avatar = AvatarFactory;
 export const Animation = AnimationFactory;
 export const Backdrop = BackdropFactory;
@@ -153,7 +160,6 @@ export const Card = CardFactory;
 export const Carousel = CarouselFactory;
 export const Checkbox = CheckboxFactory;
 export const Collapse = CollapseFactory;
-export const DatePicker = DatePickerFactory;
 export const Divider = DividerFactory;
 export const Drawer = DrawerFactory;
 export const Dropdown = DropdownFactory;
@@ -161,6 +167,8 @@ export const Form = FormFactory;
 export const Grid = GridFactory;
 export const Image = ImageFactory;
 export const Input = InputFactory;
+export const InputDate = InputDateFactory;
+export const InputPin = InputPinFactory;
 export const Label = LabelFactory;
 export const Link = LinkFactory;
 export const List = ListFactory;
@@ -178,6 +186,9 @@ export const Tabs = TabsFactory;
 export const Text = TextFactory;
 export const Tooltip = TooltipFactory;
 
-export { useDimensions, useTheme };
+// Fix PARCEL hoisting types
+export const useTheme: () => RbkTheme = useCoreTheme;
+
+export { useDimensions };
 
 export default ReactBulk;

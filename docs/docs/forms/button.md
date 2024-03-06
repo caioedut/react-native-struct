@@ -1,3 +1,7 @@
+---
+sidebar_position: 2
+---
+
 # Button
 
 Allow users to take actions and make choices, with a single tap.

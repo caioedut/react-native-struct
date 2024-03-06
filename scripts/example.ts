@@ -11,34 +11,39 @@ if (isWeb && isNative) {
 const platform = isNative ? 'native' : 'web';
 const cwd = `./examples/${platform}`;
 
-pmex('yarn build');
+pmex('build');
 
-pmex(`yarn --cwd ${cwd} install`);
+pmex(
+  {
+    npm: `install && npm prune`,
+    pnpm: `install --fix-lockfile`,
+    yarn: `install --check-files`,
+  },
+  { cwd },
+);
 
-rmSync(`${cwd}/node_modules/@react-bulk/core/dist`, {
+rmSync(`${cwd}/node_modules/@react-bulk`, {
   force: true,
   recursive: true,
 });
 
-rmSync(`${cwd}/node_modules/@react-bulk/${platform}/dist`, {
-  force: true,
-  recursive: true,
-});
+const packages = ['core', platform];
 
-cpSync('./packages/core/dist', `${cwd}/node_modules/@react-bulk/core/dist`, {
-  force: true,
-  recursive: true,
-});
+for (const pkg of packages) {
+  cpSync(`./packages/${pkg}/dist`, `${cwd}/node_modules/@react-bulk/${pkg}/dist`, {
+    force: true,
+    recursive: true,
+  });
 
-cpSync(`./packages/${platform}/dist`, `${cwd}/node_modules/@react-bulk/${platform}/dist`, {
-  force: true,
-  recursive: true,
-});
+  cpSync(`./packages/${pkg}/package.json`, `${cwd}/node_modules/@react-bulk/${pkg}/package.json`, {
+    force: true,
+  });
+}
 
 if (isWeb) {
-  pmex(`yarn --cwd ${cwd} vite dev --force`);
+  pmex('vite dev --force', { cwd });
 }
 
 if (isNative) {
-  pmex(`yarn --cwd ${cwd} expo start -c`);
+  pmex(`expo start -c`, { cwd });
 }

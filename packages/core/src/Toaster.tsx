@@ -115,7 +115,7 @@ function Toaster({ theme }: any, ref) {
           >
             <BoxFactory row noWrap alignItems="center">
               {typeof content === 'string' ? (
-                <TextFactory variant="secondary" color={textColor}>
+                <TextFactory flex variant="secondary" color={textColor}>
                   {content}
                 </TextFactory>
               ) : (

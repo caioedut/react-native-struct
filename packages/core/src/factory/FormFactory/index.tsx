@@ -83,11 +83,7 @@ const FormFactory = React.memo<FormProps>(
 
     const unsetField = useCallback(
       (name: string) => {
-        const index = fieldsRef.current.findIndex((item) => item?.name === name);
-
-        if (index !== -1) {
-          fieldsRef.current.splice(index, 1);
-        }
+        fieldsRef.current = fieldsRef.current.filter((item) => item?.name !== name);
       },
       [fieldsRef],
     );
@@ -174,7 +170,7 @@ const FormFactory = React.memo<FormProps>(
       e?.preventDefault?.();
       const nativeEvent = e?.nativeEvent ?? e;
 
-      fieldsRef.current.forEach(({ set }) => set(''));
+      fieldsRef.current.forEach(({ set }) => set(null));
       setErrors(null);
 
       dispatchEvent('clear', undefined, nativeEvent);

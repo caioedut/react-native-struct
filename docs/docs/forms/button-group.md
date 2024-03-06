@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Button Group
 
 Used to group multiple buttons into a single scrollable container.

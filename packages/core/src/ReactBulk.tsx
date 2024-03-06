@@ -3,6 +3,7 @@ import { MutableRefObject, createContext, createRef, useCallback, useEffect, use
 import BaseNative from './BaseNative';
 import BaseWeb from './BaseWeb';
 import Platform from './Platform';
+import Portal from './Portal';
 import Toaster, { ToasterRef } from './Toaster';
 import createTheme from './createTheme';
 import { RbkTheme, ThemeEditProps, ThemeModeValues, ThemeProps } from './types';
@@ -50,6 +51,8 @@ function ReactBulk({ theme, children }: any) {
       {native && <BaseNative theme={themeState}>{children}</BaseNative>}
 
       <Toaster ref={toasterRef} theme={themeState} />
+
+      <Portal />
     </Context.Provider>
   );
 }

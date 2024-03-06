@@ -5,6 +5,7 @@ import childrenize from '../../props/childrenize';
 import factory2 from '../../props/factory2';
 import get from '../../props/get';
 import { TextProps } from '../../types';
+import defined from '../../utils/defined';
 import global from '../../utils/global';
 import BoxFactory from '../BoxFactory';
 
@@ -25,6 +26,7 @@ const TextFactory = React.memo<TextProps>(
       left,
       numberOfLines,
       right,
+      selectable,
       size,
       smallCaps,
       transform,
@@ -42,18 +44,20 @@ const TextFactory = React.memo<TextProps>(
       if (numberOfLines) {
         rest.numberOfLines = numberOfLines;
       }
+
+      if (defined(selectable)) {
+        rest.selectable = selectable;
+      }
     }
 
     style = [
       color && { color },
-
       size && { fontSize: theme.rem(size) },
       weight && { fontWeight: `${weight}` },
-
       transform && { textTransform: transform },
 
       web &&
-        Number(numberOfLines) > 1 && {
+        defined(numberOfLines) && {
           display: '-webkit-box',
           '-webkit-line-clamp': `${numberOfLines}`,
           '-webkit-box-orient': 'vertical',

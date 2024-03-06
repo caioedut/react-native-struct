@@ -1,3 +1,7 @@
+---
+sidebar_position: 4
+---
+
 # Checkbox
 
 The checkbox is shown as a square box that is ticked (checked) when activated.
@@ -114,7 +118,7 @@ Extends all [`Box`](/docs/core/box#props) props.
 
 ### **`unique`**
 
-If `true`, renders a radion button.
+If `true`, renders a radio button.
 
 ➤ Type: **`boolean`** <br/>
 

@@ -1,3 +1,7 @@
+---
+sidebar_position: 8
+---
+
 # Label
 
 Used to create caption for an item in a user interface.

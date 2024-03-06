@@ -79,7 +79,7 @@ const ListFactory = React.memo<ListProps>(
       })();
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scrollRef, childrenArray.length]);
+    }, [scrollRef, childrenArray]);
 
     const handleScroll = useCallback(
       (event) => {

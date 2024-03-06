@@ -1,11 +1,15 @@
-# Date Picker
+---
+sidebar_position: 6
+---
 
-Used to display input with calendar.
+# Input Date
+
+Used to display input with calendar (date picker).
 
 ## Import
 
 ```jsx
-import { DatePicker } from '@react-bulk/web'; // OR @react-bulk/native
+import { InputDate } from '@react-bulk/web'; // OR @react-bulk/native
 ```
 
 ## Examples
@@ -13,7 +17,7 @@ import { DatePicker } from '@react-bulk/web'; // OR @react-bulk/native
 ### Basic
 
 ```jsx live
-<DatePicker value={new Date()} />
+<InputDate value={new Date()} />
 ```
 
 ### Variants
@@ -21,29 +25,49 @@ import { DatePicker } from '@react-bulk/web'; // OR @react-bulk/native
 #### Modal
 
 ```jsx live
-<DatePicker variant="modal" />
+<InputDate variant="modal" />
+```
+
+#### Dropdown
+
+```jsx live
+<InputDate variant="dropdown" />
 ```
 
 #### Inline
 
 ```jsx live
-<DatePicker variant="inline" />
+<InputDate variant="inline" />
 ```
 
 ### Min / Max
 
 ```jsx live
-<DatePicker
+<InputDate
   variant="inline"
   min="2024-01-01"
   max="2024-12-31"
 />
 ```
 
+### Format
+
+#### Default ISO
+
+```jsx live
+<InputDate value={Date.now()} />
+```
+
+#### Locale
+
+```jsx live
+<InputDate locale="en-US" value={Date.now()} />
+```
+
 ### Translation
 
 ```jsx live
-<DatePicker
+<InputDate
   variant="inline"
   translate={{
     cancel: 'Cancelar',
@@ -76,6 +100,12 @@ To the label element.
 
 Extends all [`Input`](/docs/forms/input#props) props.
 
+### **`locale`**
+
+➤ Type: **`string`** <br/>
+
+---
+
 ### **`max`**
 
 ➤ Type: **`Date` `string`** <br/>
@@ -96,7 +126,7 @@ Extends all [`Input`](/docs/forms/input#props) props.
 
 ### **`variant`**
 
-➤ Type: **`'modal'` `'inline'`** <br/>
+➤ Type: **`'modal'` `'dropdown'` `'inline'`** <br/>
 
 ---
 
@@ -152,7 +182,7 @@ See [`Theme`](/docs/layout/theme#props).
 ```jsx
 const theme = {
   components: {
-    DatePicker: {
+    InputDate: {
       defaultProps: {
         /* ...props */
       },

@@ -2,9 +2,9 @@ import React, { forwardRef } from 'react';
 
 import useTheme from '../hooks/useTheme';
 import factory2 from '../props/factory2';
+import toPx from '../styles/toPx';
 import { LoadingProps, RequiredSome } from '../types';
 import global from '../utils/global';
-import pick from '../utils/pick';
 import BoxFactory from './BoxFactory';
 import TextFactory from './TextFactory';
 
@@ -26,30 +26,18 @@ const LoadingFactory = React.memo<LoadingProps>(
       ...rest
     } = factory2<RequiredSome<LoadingProps, 'color' | 'size'>>(props, options);
 
-    if (typeof size === 'string') {
-      size = pick(size, 'medium', {
-        xsmall: 0.25,
-        small: 0.75,
-        medium: 1.25,
-        large: 1.75,
-        xlarge: 1.25,
-      });
-    }
-
     color = theme.color(color ?? 'primary');
-    size = size ?? options.defaultProps.size ?? 1;
 
-    const fontSize = theme.rem((size as number) - 0.25);
-    const base = theme.rem(size as number);
-    const c = base / 2;
+    const sizePx = toPx(size, theme)!;
+    const c = sizePx / 2;
     const w = c / 4;
     const r = c - w / 2;
 
     labelStyle = [
       {
         color,
-        fontSize,
-        ml: (size as number) * 1.6,
+        fontSize: size,
+        marginLeft: size,
       },
       labelStyle,
     ];
@@ -66,7 +54,7 @@ const LoadingFactory = React.memo<LoadingProps>(
             to: { rotate: '360deg' },
           }}
         >
-          <Svg viewBox={`0 0 ${base} ${base}`} height={base} width={base}>
+          <Svg viewBox={`0 0 ${sizePx} ${sizePx}`} height={sizePx} width={sizePx}>
             <Circle //
               cx={c}
               cy={c}
@@ -83,8 +71,8 @@ const LoadingFactory = React.memo<LoadingProps>(
               fill="none"
               stroke={color}
               strokeWidth={w}
-              strokeDasharray={base * 2.5}
-              strokeDashoffset={base * 1.875}
+              strokeDasharray={sizePx * 2.5}
+              strokeDashoffset={sizePx * 1.875}
             />
           </Svg>
         </BoxFactory>

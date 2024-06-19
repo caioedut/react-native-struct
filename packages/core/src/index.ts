@@ -98,6 +98,7 @@ export * from './styles/constants';
 export { default as css } from './styles/css';
 export { default as jss } from './styles/jss';
 export { default as sheet } from './styles/sheet';
+export { default as toPx } from './styles/toPx';
 
 // Builder
 export { default as createMeta } from './createMeta';

@@ -934,7 +934,7 @@ const base: ThemeProps = {
         defaultProps: {
           accessibility: { role: 'progressbar' },
           color: 'primary',
-          size: 'medium',
+          size: '1rem',
         },
         defaultStyles: {
           root: {

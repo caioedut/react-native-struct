@@ -231,6 +231,8 @@ export type RbkUnit =
   | (number & {})
   | (string & {});
 
+export type RbkUnitPixelable = number | `${number}px` | `${number}rem` | `${number}gap`;
+
 export type RbkSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | (number & {});
 
 export type RbkColor =
@@ -1156,7 +1158,7 @@ export type LoadingProps<ALLOW_ANY = true> = PropsWithStyles<
     color?: RbkColor;
     duration?: number;
     label?: string;
-    size?: RbkSize;
+    size?: RbkUnitPixelable;
     // Styles
     labelStyle?: RbkStyle;
     // Styles

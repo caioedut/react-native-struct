@@ -107,8 +107,8 @@ const SelectFactory = React.memo<SelectProps>(
     color = theme.color(input.error ? 'error' : !focused && !colorful ? 'gray.light' : color || 'primary');
     accessibility = deepmerge({ label: label ?? placeholder }, accessibility, { state: { expanded: visible } });
 
-    const baseSize = theme.rem(size as number);
-    const fontSize = baseSize / 2;
+    const baseSize = theme.rem(size);
+    const addonSize = baseSize / 2;
     const spacing = (baseSize - theme.rem(0.75)) / 2;
 
     const focus = useCallback(() => buttonRef?.current?.focus?.(), [buttonRef]);
@@ -310,11 +310,11 @@ const SelectFactory = React.memo<SelectProps>(
           color={color}
           endAddon={
             loading ? (
-              <LoadingFactory size={fontSize / theme.rem()} color={color} />
+              <LoadingFactory size={addonSize} color={color} />
             ) : visible ? (
-              <ChevronUp svg={svg} size={fontSize} color={color} />
+              <ChevronUp svg={svg} size={addonSize} color={color} />
             ) : (
-              <ChevronDown svg={svg} size={fontSize} color={color} />
+              <ChevronDown svg={svg} size={addonSize} color={color} />
             )
           }
           {...rest}
@@ -349,7 +349,7 @@ const SelectFactory = React.memo<SelectProps>(
                   size={size}
                   value={search}
                   onChange={handleSearch}
-                  startAddon={<MagnifyingGlass svg={svg} size={fontSize} color={color} />}
+                  startAddon={<MagnifyingGlass svg={svg} size={addonSize} color={color} />}
                 />
               </BoxFactory>
             )}
@@ -378,8 +378,8 @@ const SelectFactory = React.memo<SelectProps>(
                       contentStyle={contentStyle}
                       onPress={(e) => handleSelect(e, option.value)}
                       endAddon={
-                        <BoxFactory w={fontSize} pl={1}>
-                          {isSelected && <Check svg={svg} size={fontSize} color={color} />}
+                        <BoxFactory w={addonSize} pl={1}>
+                          {isSelected && <Check svg={svg} size={addonSize} color={color} />}
                         </BoxFactory>
                       }
                       ref={(el) => {

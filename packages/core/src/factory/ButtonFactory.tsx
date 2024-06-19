@@ -162,7 +162,7 @@ const ButtonFactory = React.memo<ButtonProps>(
 
         {loading && (
           <BoxFactory position="absolute" i={0} center>
-            <LoadingFactory color={textColor} size={(size as number) / 2} />
+            <LoadingFactory color={textColor} size={baseSize / 2} />
           </BoxFactory>
         )}
 

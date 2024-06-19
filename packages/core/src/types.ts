@@ -236,6 +236,8 @@ export type RbkUnitPixelable = number | `${number}px` | `${number}rem` | `${numb
 export type RbkSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | (number & {});
 
 export type RbkColor =
+  | 'white'
+  | 'black'
   | ColorTypographyToken
   | ColorToken
   | `${ColorTypographyToken}.${ColorTypographyTone}`

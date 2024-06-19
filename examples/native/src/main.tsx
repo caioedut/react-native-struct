@@ -374,36 +374,13 @@ function TypographyExample() {
       <Text variant="title">Typography</Text>
 
       <Grid alignItems="baseline" gap mt="1gap">
-        <Box>
-          <Text variant="h1">H1</Text>
-        </Box>
-        <Box>
-          <Text variant="h2">H2</Text>
-        </Box>
-        <Box>
-          <Text variant="h3">H3</Text>
-        </Box>
-        <Box>
-          <Text variant="h4">H4</Text>
-        </Box>
-        <Box>
-          <Text variant="h5">H5</Text>
-        </Box>
-        <Box>
-          <Text variant="h6">H6</Text>
-        </Box>
-        <Box>
-          <Text variant="title">Title</Text>
-        </Box>
-        <Box>
-          <Text variant="subtitle">Subtitle</Text>
-        </Box>
-        <Box>
-          <Text variant="caption">Caption</Text>
-        </Box>
-        <Box>
-          <Text>Text</Text>
-        </Box>
+        {texts.map((text) => (
+          <Box key={text}>
+            <Text key={text} variant={text}>
+              {getLabel(text)}
+            </Text>
+          </Box>
+        ))}
       </Grid>
     </>
   );
@@ -1297,6 +1274,7 @@ const variants = ['solid', 'outline', 'text'] as const;
 const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 const placements = ['top', 'bottom', 'left', 'right'] as const;
 const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;
+const texts = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'title', 'subtitle', 'primary', 'secondary', 'caption'] as const;
 
 const formData = {
   firstName: 'Richard',

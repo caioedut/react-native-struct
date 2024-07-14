@@ -36,6 +36,7 @@ const ResizableFactory = React.memo<ResizableProps>(
     const rootRef = useDefaultRef<any>(ref);
     const metricsRef = useRef<any>();
     const initEventRef = useRef<any>();
+    const maskRef = useRef<any>();
 
     style = [
       web && horizontal && { resize: 'horizontal' },
@@ -61,6 +62,8 @@ const ResizableFactory = React.memo<ResizableProps>(
             native: {
               onStartShouldSetResponder: () => true,
               onResponderGrant: () => {
+                setNativeStyle(maskRef.current, { opacity: 1 });
+
                 setResponder({
                   onStartShouldSetResponder: () => true,
                   onMoveShouldSetResponder: () => true,
@@ -84,11 +87,13 @@ const ResizableFactory = React.memo<ResizableProps>(
                     }
                   },
                   onResponderRelease: () => {
+                    setNativeStyle(maskRef.current, { opacity: 0 });
                     metricsRef.current = null;
                     initEventRef.current = null;
                     releaseResponder();
                   },
                   onResponderTerminate: () => {
+                    setNativeStyle(maskRef.current, { opacity: 0 });
                     metricsRef.current = null;
                     initEventRef.current = null;
                     releaseResponder();
@@ -100,6 +105,8 @@ const ResizableFactory = React.memo<ResizableProps>(
         >
           <Resize svg={svg} color={theme.color('text')} />
         </BoxFactory>
+
+        <BoxFactory ref={maskRef} position="absolute" bg="blue.main.15" i={0} opacity={0} pointerEvents="none" />
       </BoxFactory>
     );
   }),

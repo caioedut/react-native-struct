@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback } from 'react';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 
 import useDependentState from '../hooks/useDependentState';
 import useTheme from '../hooks/useTheme';
@@ -40,29 +40,36 @@ const CalendarFactory = React.memo<CalendarProps>(
 
     const [internal, setInternal] = useDependentState(() => dateify(date), [date]);
 
-    const eventsDates = events?.filter(Boolean)?.map((value) => dateify(value)) || [];
+    const eventsDates = useMemo(() => events?.filter(Boolean)?.map((value) => dateify(value)) || [], [events]);
 
-    const monthName = internal.toLocaleDateString(locale, { month: 'long' });
+    const monthName = useMemo(() => internal.toLocaleDateString(locale, { month: 'long' }), [internal, locale]);
 
-    const daysInMonth = new Date(internal.getFullYear(), internal.getMonth() + 1, 0).getDate();
+    const daysInMonth = useMemo(
+      () => new Date(internal.getFullYear(), internal.getMonth() + 1, 0).getDate(),
+      [internal],
+    );
 
-    const monthDates = Array.from({ length: daysInMonth }).map((_, index) => {
-      const date = dateify(internal);
-      date.setDate(index + 1);
-      return date;
-    });
+    const monthDates = useMemo(() => {
+      const newMonthDates = Array.from({ length: daysInMonth }).map((_, index) => {
+        const date = dateify(internal);
+        date.setDate(index + 1);
+        return date;
+      });
 
-    while (monthDates[0].getDay() !== 0) {
-      const date = dateify(monthDates[0]);
-      date.setDate(date.getDate() - 1);
-      monthDates.unshift(date);
-    }
+      while (newMonthDates[0].getDay() !== 0) {
+        const date = dateify(newMonthDates[0]);
+        date.setDate(date.getDate() - 1);
+        newMonthDates.unshift(date);
+      }
 
-    while (monthDates.length < 35 || monthDates.length % 7 !== 0) {
-      const date = dateify(monthDates.slice(-1)[0]);
-      date.setDate(date.getDate() + 1);
-      monthDates.push(date);
-    }
+      while (newMonthDates.length < 35 || newMonthDates.length % 7 !== 0) {
+        const date = dateify(newMonthDates.slice(-1)[0]);
+        date.setDate(date.getDate() + 1);
+        newMonthDates.push(date);
+      }
+
+      return newMonthDates;
+    }, [daysInMonth, internal]);
 
     const handleYear = useCallback(
       (year: number) => {

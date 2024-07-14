@@ -13,8 +13,9 @@ const DrawerFactory = React.memo<DrawerProps>(
 
     // Extends from default props
     const {
+      keepMounted,
       placement,
-      visible,
+      visible: drawerVisible,
       onClose,
       // Styles
       variants,
@@ -24,7 +25,7 @@ const DrawerFactory = React.memo<DrawerProps>(
     } = factory2<RequiredSome<DrawerProps, 'placement'>>(props, options);
 
     const hiddenStyle = {
-      [placement]: '-50%',
+      [placement]: '-100%',
     };
 
     const visibleStyle = {
@@ -32,7 +33,13 @@ const DrawerFactory = React.memo<DrawerProps>(
     };
 
     return (
-      <BackdropFactory visible={visible} onPress={onClose} style={backdropStyle} variants={{ root: variants.backdrop }}>
+      <BackdropFactory
+        visible={drawerVisible}
+        keepMounted={keepMounted}
+        onPress={onClose}
+        style={backdropStyle}
+        variants={{ root: variants.backdrop }}
+      >
         <BoxFactory
           ref={ref}
           key={placement}
@@ -40,9 +47,8 @@ const DrawerFactory = React.memo<DrawerProps>(
           style={style}
           variants={{ root: variants.root }}
           animation={{
-            duration: 200,
-            from: visible ? hiddenStyle : visibleStyle,
-            to: visible ? visibleStyle : hiddenStyle,
+            from: drawerVisible ? hiddenStyle : visibleStyle,
+            to: drawerVisible ? visibleStyle : hiddenStyle,
           }}
         >
           {children}

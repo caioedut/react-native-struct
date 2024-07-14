@@ -3,6 +3,7 @@ import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react
 import cometta from 'cometta';
 
 import extract from '../props/extract';
+import omit from '../props/omit';
 import { notPxProps, transformProps } from '../styles/constants';
 import css from '../styles/css';
 import jss from '../styles/jss';
@@ -18,14 +19,13 @@ import useHtmlId from './useHtmlId';
 
 function jssWithTransform(style) {
   const resolved = jss(style);
-  const transformStyles = extract([...transformProps], resolved, transform(extract('transform', resolved)?.transform));
-  return { ...resolved, ...transformStyles };
+  return omit('transform', { ...resolved, ...transform(resolved?.transform) });
 }
 
 export default function useAnimation(style?: RbkAnimation['from'], ref?: MutableRefObject<any>) {
   const { web, native } = global.mapping;
 
-  const baseStyle = useMemo(() => jss(style), [style]);
+  const baseStyle = useMemo(() => jssWithTransform(style), [style]);
 
   const elRef = useDefaultRef<any>(ref);
 
@@ -37,6 +37,8 @@ export default function useAnimation(style?: RbkAnimation['from'], ref?: Mutable
 
   const setStyle = useCallback(
     (attr: string, value: any, unit = null) => {
+      const isTransforming = transformProps.includes(attr as any);
+
       let prop = attr;
 
       if (web) {
@@ -64,8 +66,10 @@ export default function useAnimation(style?: RbkAnimation['from'], ref?: Mutable
       }
 
       // Parse "transform" props
-      if (transformProps.includes(attr as any)) {
+      if (isTransforming) {
         prop = 'transform';
+
+        styleRef.current[attr] = value;
 
         if (web) {
           transformRef.current[attr] = `${attr}(${value})`;
@@ -90,7 +94,9 @@ export default function useAnimation(style?: RbkAnimation['from'], ref?: Mutable
         }
       });
 
-      styleRef.current[attr] = value;
+      if (!isTransforming) {
+        styleRef.current[attr] = value;
+      }
     },
     [elRef, native, web],
   );
@@ -136,7 +142,7 @@ export default function useAnimation(style?: RbkAnimation['from'], ref?: Mutable
           from = styleRef.current,
           boomerang = false,
           delay = 0,
-          duration = 350,
+          duration = 250,
           iterations = 1,
           throttle = 0,
           timing = 'linear',
@@ -145,7 +151,8 @@ export default function useAnimation(style?: RbkAnimation['from'], ref?: Mutable
 
         from = jssWithTransform(from);
         to = jssWithTransform(to);
-        const lastState = { ...to };
+
+        const lastState = clone(to);
 
         const meta = Object.fromEntries(
           Object.keys(to).map((attr) => {

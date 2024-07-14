@@ -27,7 +27,7 @@ export const Context = createContext<{
   toasterRef: MutableRefObject<ToasterRef>;
 }>(null as any);
 
-function ReactBulk({ theme, children }: any) {
+export default function ReactBulk({ theme, children }: any) {
   const { web, native } = Platform;
 
   const [responder, setResponder] = useState<Responder>();
@@ -72,5 +72,3 @@ function ReactBulk({ theme, children }: any) {
     </Context.Provider>
   );
 }
-
-export default ReactBulk;

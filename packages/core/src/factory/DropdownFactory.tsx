@@ -18,6 +18,7 @@ const DropdownFactory = React.memo<DropdownProps>(
 
     // Extends from default props
     const {
+      keepMounted,
       placement,
       visible,
       triggerRef,
@@ -64,7 +65,12 @@ const DropdownFactory = React.memo<DropdownProps>(
 
     return (
       <BoxFactory ref={boxRef}>
-        <BackdropFactory visible={visible} variants={{ root: variants.backdrop }} onPress={onClose}>
+        <BackdropFactory
+          visible={visible}
+          keepMounted={keepMounted}
+          variants={{ root: variants.backdrop }}
+          onPress={onClose}
+        >
           <BoxFactory ref={ref} position="absolute" style={positions}>
             <BoxFactory
               variants={{ root: variants.root }}

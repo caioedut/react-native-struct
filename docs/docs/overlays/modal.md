@@ -90,6 +90,18 @@ Vertical alignment.
 
 ➤ Type: **`boolean`** <br/>
 
+---
+
+### **`keepMounted`**
+
+`true`: the content remains mounted (rendered) even when it is not visible. This can be useful in situations where you want to preserve the internal state of the content, such as form values or other component states, while it is hidden.
+
+`false`: the content is unmounted when it is not visible. This means that the elements are removed, which can help improve performance, especially in applications with heavy components.
+
+:::note
+A dynamic portal is created and rendered at the root of the `ReactBulk` provider when the value is `true`. Be mindful of organizing your React Contexts.
+:::
+
 ## Styles
 
 ### **`style`**

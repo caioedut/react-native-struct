@@ -134,6 +134,25 @@ const InputDateFactory = React.memo<InputDateProps>(
     size = getSize(size);
     color = theme.color(input.error ? 'error' : color);
 
+    const getDisabledDates = useCallback(
+      (date) => {
+        const currentDate = dateify(date);
+        const minDate = min ? dateify(min) : null;
+        const maxDate = max ? dateify(max) : null;
+
+        if (minDate && currentDate < minDate) {
+          return true;
+        }
+
+        if (maxDate && currentDate > maxDate) {
+          return true;
+        }
+
+        return false;
+      },
+      [max, min],
+    );
+
     const focus = useCallback(() => inputRef?.current?.focus?.(), [inputRef]);
     const blur = useCallback(() => inputRef?.current?.blur?.(), [inputRef]);
     const clear = useCallback(() => input.clear(), [input]);
@@ -143,54 +162,69 @@ const InputDateFactory = React.memo<InputDateProps>(
       [inputRef],
     );
 
-    function dispatchEvent(type, event, handler?, value?) {
-      if (typeof handler !== 'function') return;
+    const dispatchEvent = useCallback(
+      (type, event, handler?, value?) => {
+        if (typeof handler !== 'function') return;
 
-      value = typeof value === 'undefined' ? input.state : value;
+        value = typeof value === 'undefined' ? input.state : value;
 
-      const form = input.form;
-      const target = inputRef.current;
+        const form = input.form;
+        const target = inputRef.current;
 
-      return handler?.(
-        {
-          ...event,
-          handler: 'RbkInputEvent',
-          type,
+        return handler?.(
+          {
+            ...event,
+            handler: 'RbkInputEvent',
+            type,
+            value,
+            name,
+            form,
+            focus,
+            blur,
+            clear,
+            reset,
+            isFocused,
+            target,
+          },
           value,
-          name,
-          form,
-          focus,
-          blur,
-          clear,
-          reset,
-          isFocused,
-          target,
-        },
-        value,
-      );
-    }
+        );
+      },
+      [blur, clear, focus, input.form, input.state, isFocused, name, reset],
+    );
 
-    function handleFocus(event) {
-      dispatchEvent('focus', event, onFocus);
+    const handleFocus = useCallback(
+      (event) => {
+        dispatchEvent('focus', event, onFocus);
 
-      if (!disabled && !readOnly) {
-        setCalendarVisible(true);
-      }
-    }
+        if (!disabled && !readOnly) {
+          setCalendarVisible(true);
+        }
+      },
+      [disabled, dispatchEvent, onFocus, readOnly],
+    );
 
-    function handleBlur(event) {
-      dispatchEvent('blur', event, onBlur);
-    }
+    const handleBlur = useCallback(
+      (event) => {
+        dispatchEvent('blur', event, onBlur);
+      },
+      [dispatchEvent, onBlur],
+    );
 
-    function handleSubmit(event) {
-      dispatchEvent('submit', event, onSubmit);
-    }
+    const handleSubmit = useCallback(
+      (event) => {
+        dispatchEvent('submit', event, onSubmit);
+      },
+      [dispatchEvent, onSubmit],
+    );
 
-    function handleChange(event, date) {
-      if (disabled || readOnly) return;
-      input.setState(resolveAsDate(date), event);
-      setCalendarVisible(false);
-    }
+    const handleChange = useCallback(
+      (event, date) => {
+        if (disabled || readOnly) return;
+        input.setState(resolveAsDate(date), event);
+        setCalendarVisible(false);
+      },
+      [disabled, input, readOnly, resolveAsDate],
+    );
 
     return (
       <>
@@ -252,28 +286,16 @@ const InputDateFactory = React.memo<InputDateProps>(
               </TextFactory>
             )}
             <BoxFactory h={380}>
-              <CalendarFactory
-                shadow={0}
-                color={color}
-                date={input.state}
-                events={input.state ? [input.state] : []}
-                onPressDate={handleChange}
-                disableds={(date) => {
-                  const currentDate = dateify(date);
-                  const minDate = min ? dateify(min) : null;
-                  const maxDate = max ? dateify(max) : null;
-
-                  if (minDate && currentDate < minDate) {
-                    return true;
-                  }
-
-                  if (maxDate && currentDate > maxDate) {
-                    return true;
-                  }
-
-                  return false;
-                }}
-              />
+              {calendarVisible && (
+                <CalendarFactory
+                  shadow={0}
+                  color={color}
+                  date={input.state}
+                  events={input.state ? [input.state] : []}
+                  onPressDate={handleChange}
+                  disableds={getDisabledDates}
+                />
+              )}
             </BoxFactory>
 
             <DividerFactory />

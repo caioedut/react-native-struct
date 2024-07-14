@@ -8,7 +8,7 @@ const base: ThemeProps = {
   custom: {},
 
   shape: {
-    borderRadius: 4,
+    borderRadius: 6,
     spacing: 4,
     gap: 4, // gap is generally multiplied by spacing
   },
@@ -19,13 +19,13 @@ const base: ThemeProps = {
   },
 
   colors: {
-    primary: '#8B5CF6',
-    secondary: '#0D542D',
+    primary: '#7E57C2',
+    secondary: '#C0CA33',
 
-    info: '#0099CC',
-    success: '#1C8A35',
-    warning: '#B0620E',
-    error: '#EF4444',
+    info: '#1E88E5',
+    success: '#43A047',
+    warning: '#F39C12',
+    error: '#E53935',
 
     amber: '#FFAB00',
     blue: '#2962FF',
@@ -705,9 +705,7 @@ const base: ThemeProps = {
       },
       GrowBox: {
         name: 'rbk-grow-box',
-        defaultProps: {
-          duration: 200,
-        },
+        defaultProps: {},
         defaultStyles: {
           root: {
             overflow: 'hidden',
@@ -932,6 +930,7 @@ const base: ThemeProps = {
       Loading: {
         name: 'rbk-loading',
         defaultProps: {
+          duration: 500,
           accessibility: { role: 'progressbar' },
           color: 'primary',
           size: '1rem',
